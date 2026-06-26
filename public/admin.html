@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Place</title>
+
+    <!-- 🔒 AUTH CHECK MUST BE HERE (in <head>) -->
+    <script>
+        (function() {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const token = localStorage.getItem("token");
+
+            // If no user or no token, kick them out
+            if (!user || !token) {
+                alert("You must login first");
+                window.location.replace("login.html");
+                return;
+            }
+
+            // If they are logged in but NOT an admin, kick them out
+            if (user.role !== "admin") {
+                alert("Access denied: Admins only");
+                window.location.replace("index.html");
+                return;
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <a href="index.html">Back to Map</a>
+        </nav>
+    </header>
+
+    <div id="map-container">
+        <div class="top-bar">
+            <button onclick="logout()" class="logout-btn">
+                Logout
+            </button>
+        </div>
+
+        <div id="map"></div>
+        
+        <div class="admin-panel">
+            <h2>Add New Place</h2>
+            <form id="place-form">
+                <div class="form-group">
+                    <label>Place Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Latitude</label>
+                    <input type="number" step="any" id="lat" required>
+                </div>
+                <div class="form-group">
+                    <label>Longitude</label>
+                    <input type="number" step="any" id="lng" required>
+                </div>
+                <div>
+                    <label>Type</label>
+                    <select id="type">
+                        <option value="university">University</option>
+                        <option value="hospital">Hospital</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="station">Station</option>
+                        <option value="residence">Residence</option>
+                        <option value="atm">ATM</option>
+                        <option value="post_office">Post Office</option>
+                        <option value="library">Library</option>
+                        <option value="museum">Museum</option>
+                        <option value="supermarket">Supermarket</option>
+                        <option value="green_space">Green Space</option>
+                        <option value="mosque">Mosque</option>
+                        <option value="police_station">Police Station</option>
+                        <option value="telecom_agency">Telecom Agency</option>
+                        <option value="municipality">Municipality</option>
+                        <option value="private_restaurant">Private Restaurant</option>
+                        <option value="private_library">Private Library</option>
+                        <option value="private_clinic">Private Clinic</option>
+                        <option value="small_shop">Small Shop</option>
+                        <option value="training_center">Training Center / Academy</option>
+                    </select>
+                </div>
+                <p style="font-size:0.8rem; color:#666;">💡 Tip: Click on the map to auto-fill coordinates.</p>
+                <button type="submit">Save Place</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/map-init.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+        function logout() {
+            localStorage.clear(); // Clears both user and token
+            window.location.replace("login.html");
+        }
+    </script>
+</body>
+</html>
